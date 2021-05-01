@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en" id="main" scheme="bright_light">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Крестики-нолики</title>
+	<script>
+	
+		document.addEventListener("DOMContentLoaded", function(event) {
+		   document.getElementById("main").setAttribute("scheme", localStorage.getItem("scheme"));	
+		});
+   	</script>
+	<link rel="stylesheet" id="theme" href="styles/index.css">
+	<link rel="stylesheet"  href="styles/bootstrap.css">
+</head>
+<body onselectstart="return false">
+	<div id="page-preloader" class="preloader">
+		<div class="loader">
+			<h1 class="cross-title">КРЕСТИКИ</h1>
+			<div class="loader-grid">
+				<div class="loader-item loader-item-1"></div>
+				<div class="loader-item loader-item-2"><div class="loader-circle"></div></div>
+				<div class="loader-item loader-item-3"><div class="loader-cross"></div></div>
+				<div class="loader-item loader-item-4"><div class="loader-circle"></div></div>
+				<div class="loader-item loader-item-5"><div class="loader-spinner"></div></div>
+				<div class="loader-item loader-item-6"><div class="loader-cross"></div></div>
+				<div class="loader-item loader-item-7"><div class="loader-circle"></div></div>
+				<div class="loader-item loader-item-8"><div class="loader-circle"></div></div>
+				<div class="loader-item loader-item-9"></div>
+			</div>
+			<h1 class="circle-title">НОЛИКИ</h1>
+		</div>
+	</div>
+	<div class="content">
+	<div class="modal fade" id="draw" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<h5 class="modal-title turn-header" id="exampleModalLabel">...Ничья...</h5>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" onclick="StartGame()">Новая игра</button>
+					<button type="button" class="btn btn-secondary" onclick="statistics()">Статистика</button>
+					<button type="button" class="btn btn-secondary" onclick="inmenu()">В главное меню</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="lose" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+			  	<div class="modal-body">
+					<h5 class="modal-title turn-header" id="exampleModalLabel">Вы проиграли:(</h5>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" onclick="StartGame()">Новая игра</button>
+					<button type="button" class="btn btn-secondary" onclick="statistics()">Статистика</button>
+					<button type="button" class="btn btn-secondary" onclick="inmenu()">В главное меню</button>
+				</div>
+		  	</div>
+		</div>
+	</div>
+	<div class="modal fade" id="win" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+		  	<div class="modal-content">
+				<div class="modal-body">
+				  	<h5 class="modal-title turn-header" id="exampleModalLabel">Вы победили! Ура)</h5>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" onclick="StartGame()">Новая игра</button>
+					<button type="button" class="btn btn-secondary" onclick="statistics()">Статистика</button>
+					<button type="button" class="btn btn-secondary" onclick="inmenu()">В главное меню</button>
+				</div>
+		  	</div>
+		</div>
+	</div>
+	<div class="modal fade" id="computerTurn" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+		  	<div class="modal-content">
+			  	<h5 class="modal-title turn-header" id="exampleModalLabel">Ход компьютера!</h5>
+		  	</div>
+		</div>
+	</div>
+	<div class="modal fade" id="yourTurn" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+		  	<div class="modal-content">
+			  	<h5 class="modal-title turn-header" id="exampleModalLabel">Ваш ход!</h5>
+		  	</div>
+		</div>
+	</div>
+	<div class="modal fade" id="startMessage" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  	<h4 class="modal-title" id="exampleModalLabel">Вы - крестики!</h4>
+			</div>
+			<div class="modal-body">
+				Для победы составьте линию из крестиков! <br> Удачи!!!!
+			</div>
+		  </div>
+		</div>
+	</div>
+	<div class="modal fade" id="startMessageCircle" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  	<h4 class="modal-title" id="exampleModalLabel">Вы - нолики!</h4>
+			</div>
+			<div class="modal-body">
+				Для победы составьте линию из ноликов! <br> Удачи!!!!
+			</div>
+		  </div>
+		</div>
+	</div>
+	<div class="modal fade" id="gameStart" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  	<h4 class="modal-title" id="exampleModalLabel">Крестики-Нолики</h4>
+			</div>
+			<div class="modal-body">
+			  Одержи победу над компьютером в легендарной игре!
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" onclick="StartGame()">Начать игру!</button>
+				<button type="button" class="btn btn-secondary" onclick="statistics()">Статистика</button>
+				<button type="button" class="btn btn-secondary" onclick="about()">О приложении</button>
+			</div>
+		  </div>
+		</div>
+	</div>
+	<div class="modal fade" id="about" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-scrollable">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="exampleModalLabel">О приложении</h4>
+				</div>
+				<div class="modal-body">
+					<div class="about">
+						<h5 class="about-title">Информация</h5>
+						<p class="about-item">
+							<span class="about-item__title">Разработчик: </span>
+							<span class="about-item__value about-dev"></span>
+						</p>
+						<p class="about-item">
+							<span class="about-item__title">Версия: </span>
+							<span class="about-item__value about-version"></span>
+						</p>
+						<p class="about-item">
+							<span class="about-item__title">Дата: </span>
+							<span class="about-item__value about-date"></span>
+						</p>
+						<p class="about-item">
+							Создано при поддержке Node.js и Bootstrap.<br>
+							Icons made by <a href="#" data-toggle="tooltip" data-placement="top" title="https://www.flaticon.com/authors/freepik" tabindex="-1">Freepik</a> from <a tabindex="-1" data-toggle="tooltip" data-placement="top" href="#" title="https://www.flaticon.com/"> www.flaticon.com</a><br>
+							&copy; 2020-2020 All rights reserved.
+						</p>
+					</div>
+					<hr class="about-item-hr">
+					<div class="settings">
+						<h5 class="settings-title">Настройки</h5>
+						<div class="settings-area">
+							<div class="form-check form-switch">
+								<label class="settings-item__title settings-item-title">Ходить вторым</label>
+								<input id="change_turn" class="form-check-input form-check-input-turn" data-toggle="tooltip" data-placement="top" title="Компьютер будет ходить первым" type="checkbox">
+							</div>
+						</div>
+						<div class="settings-area">
+							<div class="form-check form-switch">
+								<label class="settings-item-title settings-item__title" for="flexSwitchCheckDefault">Играть за нолики</label>
+								<input id="change_item" class="form-check-input form-check-input-item" data-toggle="tooltip" data-placement="top" title="Вы будете играть ноликами, а компьютер - крестиками" type="checkbox">
+							</div>
+						</div>
+						<div class="settings-area">
+							<div class="form-check form-switch">
+								<label class="settings-item__title settings-item-title">Игра на двоих</label>
+								<input id="change_gamemode" class="form-check-input-theme form-check-input" data-toggle="tooltip" data-placement="top" title="Вы сможете играть с другом" type="checkbox">
+							</div>
+						</div>
+						<div class="settings-area">
+							<div class="form-check form-switch">
+								<label class="settings-item__title settings-item-title">Тёмная тема</label>
+								<input id="change_theme" class="form-check-input-theme form-check-input" data-toggle="tooltip" data-placement="top" title="Включить тёмную тему" type="checkbox">
+							</div>
+						</div>
+						<div class="settings-area set-lvl">
+							<label class="settings-item__title settings-item-title">Уровень сложности</label>
+							<input type="range" id="range" class="form-range range" min="1" max="3" step="1">
+							<div class="settings__lvl-main">
+								<p class="settings__lvl-1 settings__lvl">Лёгкий</p>
+								<p class="settings__lvl-2 settings__lvl">Средний</p>
+								<p class="settings__lvl-3 settings__lvl">Сложный</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" onclick="backAbout()">Назад</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="statistics" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="examoleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="exampleModalLabel">Ваша статистика</h4>
+				</div>
+				<div class="modal-body">
+					<ul class="nav nav-pills" id="myTab" role="tablist">
+						<li class="nav-item" role="presentation">
+						  <a class="nav-link" id="easy-tab" data-toggle="tab" href="#easy" role="tab" aria-controls="easy" aria-selected="false">Лёгкий<span class="underline"></span></a>
+						</li>
+						<li class="nav-item" role="presentation">
+						  <a class="nav-link" id="normal-tab" data-toggle="tab" href="#normal" role="tab" aria-controls="normal" aria-selected="false">Средний<span class="underline"></span>  </a>
+						</li>
+						<li class="nav-item" role="presentation">
+						  <a class="nav-link" id="hard-tab" data-toggle="tab" href="#hard" role="tab" aria-controls="hard" aria-selected="false">Сложный<span class="underline"></span>  </a>
+						</li>
+					</ul>
+					  <div class="tab-content" id="myTabContent">
+						<div class="tab-pane fade show active" id="easy" role="tabpanel" aria-labelledby="easy-tab">
+							<p class="stat-item">
+								<span class="stat-item__title">Всего игр: </span>
+								<span class="stat-item__val stat-all-easy"></span>
+							</p>
+							<hr class="stat-item-hr">
+							<p class="stat-item">
+								<span class="stat-item__title">Победы: </span>
+								<span class="stat-item__val stat-win-easy"></span>
+							</p>
+							<p class="stat-item">
+								<span class="stat-item__title">Поражения: </span>
+								<span class="stat-item__val stat-lose-easy">100</span>
+							</p>
+							<p class="stat-item">
+								<span class="stat-item__title">Ничьи: </span>
+								<span class="stat-item__val stat-draw-easy"></span>
+							</p>
+							<hr class="stat-item-hr">
+							<p class="stat-item">
+								<span class="stat-item__title">Процент побед: </span>
+								<span class="stat-item__val stat-winrate-easy"></span>
+							</p>
+						</div>
+						<div class="tab-pane fade" id="normal" role="tabpanel" aria-labelledby="normal-tab">
+							<p class="stat-item">
+								<span class="stat-item__title">Всего игр: </span>
+								<span class="stat-item__val stat-all-normal"></span>
+							</p>
+							<hr class="stat-item-hr">
+							<p class="stat-item">
+								<span class="stat-item__title">Победы: </span>
+								<span class="stat-item__val stat-win-normal"></span>
+							</p>
+							<p class="stat-item">
+								<span class="stat-item__title">Поражения: </span>
+								<span class="stat-item__val stat-lose-normal">100</span>
+							</p>
+							<p class="stat-item">
+								<span class="stat-item__title">Ничьи: </span>
+								<span class="stat-item__val stat-draw-normal"></span>
+							</p>
+							<hr class="stat-item-hr">
+							<p class="stat-item">
+								<span class="stat-item__title">Процент побед: </span>
+								<span class="stat-item__val stat-winrate-normal"></span>
+							</p>
+						</div>
+						<div class="tab-pane fade" id="hard" role="tabpanel" aria-labelledby="hard-tab">
+							<p class="stat-item">
+								<span class="stat-item__title">Всего игр: </span>
+								<span class="stat-item__val stat-all-hard"></span>
+							</p>
+							<hr class="stat-item-hr">
+							<p class="stat-item">
+								<span class="stat-item__title">Победы: </span>
+								<span class="stat-item__val stat-win-hard"></span>
+							</p>
+							<p class="stat-item">
+								<span class="stat-item__title">Поражения: </span>
+								<span class="stat-item__val stat-lose-hard">100</span>
+							</p>
+							<p class="stat-item">
+								<span class="stat-item__title">Ничьи: </span>
+								<span class="stat-item__val stat-draw-hard"></span>
+							</p>
+							<hr class="stat-item-hr">
+							<p class="stat-item">
+								<span class="stat-item__title">Процент побед: </span>
+								<span class="stat-item__val stat-winrate-hard"></span>
+							</p>
+						</div>
+					  </div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-secondary" onclick="backStat()">Назад</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="game-field">
+		<div class="wraper">
+			<div class="game-item" id="item1"></div>
+		</div>
+		<div class="wraper">
+			<div class="game-item" id="item2"></div>
+		</div>
+		<div class="wraper">
+			<div class="game-item" id="item3"></div>
+		</div>
+		<div class="wraper">
+			<div class="game-item" id="item4"></div>
+		</div>
+		<div class="wraper">
+			<div class="game-item" id="item5"></div>
+		</div>
+		<div class="wraper">
+			<div class="game-item" id="item6"></div>
+		</div>
+		<div class="wraper">
+			<div class="game-item" id="item7"></div>
+		</div>
+		<div class="wraper">
+			<div class="game-item" id="item8"></div>
+		</div>
+		<div class="wraper">
+			<div class="game-item" id="item9"></div>
+		</div>
+	</div></div>
+<script src="common/jquery-3.4.1.min.js"></script>
+<script src="common/bootstrap.bundle.js"></script>
+<script src="gameRules/GameScript.js"></script>
+<script src="statistics.js"></script>
+<script src="about.js"></script>
+<script src="preloader.js"></script>
+</body>
+</html>

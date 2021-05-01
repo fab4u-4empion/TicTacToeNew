@@ -1,8 +1,8 @@
 {
   "name": "my-new-app",
   "productName": "TicTacToe",
-  "version": "3.2.1",
-  "date": "26.01.2020",
+  "version": "3.2.2",
+  "date": "01.05.2021",
   "description": "My Electron application description",
   "main": "src/index.js",
   "scripts": {

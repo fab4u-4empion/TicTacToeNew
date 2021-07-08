@@ -1,13 +1,6 @@
 function about() {
 	$("#gameStart").modal("hide");
 	$("#about").modal("show");
-	$.getJSON("../package.json", function(data){
-		$(".about-dev").html(data.developer + ", " + data.author);
-		$(".about-version").html(data.version);
-		$(".about-date").html(data.date);
-		$(".about-electron").html(data.dependencies["electron"]);
-		$(".about-jq").html(data.dependencies["jquery"]);
-	});
 }
 
 function backAbout() {
@@ -34,6 +27,37 @@ $("#change_turn").change(function() {
 		localStorage.setItem('first-turn', false);
 	} else {
 		localStorage.setItem('first-turn', true);
+	}
+});
+
+//gamemode
+$(document).ready(function(){
+	if (localStorage.getItem('game_mode') == "true") { 
+		$("#change_gamemode").attr("checked", "true");
+	}
+	if ($("#change_gamemode").is(':checked')) {
+		$("#change_turn").attr('disabled', 'disabled')
+		$("#change_item").attr('disabled', 'disabled')
+	} else {
+		$("#change_turn").removeAttr('disabled')	
+		$("#change_item").removeAttr('disabled')
+	}
+});
+
+$("#change_gamemode").change(function() {
+	this.blur();
+	if ($(this).is(':checked')) {
+		$("#change_turn").attr('disabled', 'disabled')
+		$("#change_item").attr('disabled', 'disabled')
+	} else {
+		$("#change_turn").removeAttr('disabled')	
+		$("#change_item").removeAttr('disabled')
+	}
+		
+	if (localStorage.getItem('game_mode') == "true") {
+		localStorage.setItem('game_mode', false);
+	} else {
+		localStorage.setItem('game_mode', true);
 	}
 });
 

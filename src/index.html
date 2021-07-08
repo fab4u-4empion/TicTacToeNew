@@ -46,6 +46,34 @@
 			</div>
 		</div>
 	</div>
+	<div class="modal fade" id="win_cross" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<h5 class="modal-title turn-header" id="exampleModalLabel">Крестики победили</h5>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" onclick="StartGame()">Новая игра</button>
+					<button type="button" class="btn btn-secondary" onclick="statistics()">Статистика</button>
+					<button type="button" class="btn btn-secondary" onclick="inmenu()">В главное меню</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="win_circle" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<h5 class="modal-title turn-header" id="exampleModalLabel">Нолики победили</h5>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" onclick="StartGame()">Новая игра</button>
+					<button type="button" class="btn btn-secondary" onclick="statistics()">Статистика</button>
+					<button type="button" class="btn btn-secondary" onclick="inmenu()">В главное меню</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div class="modal fade" id="lose" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -88,7 +116,7 @@
 		  	</div>
 		</div>
 	</div>
-	<div class="modal fade" id="startMessage" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal fade" id="startMessage" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 		  <div class="modal-content">
 			<div class="modal-header">
@@ -96,6 +124,18 @@
 			</div>
 			<div class="modal-body">
 				Для победы составьте линию из крестиков! <br> Удачи!!!!
+			</div>
+		  </div>
+		</div>
+	</div>
+	<div class="modal fade" id="startMessagePVP" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  	<h4 class="modal-title" id="exampleModalLabel">Игра на двоих!</h4>
+			</div>
+			<div class="modal-body">
+				Побеждает тот, кто первый составит линию из крестиков или ноликов! <br> Удачи!!!!
 			</div>
 		  </div>
 		</div>
@@ -136,27 +176,6 @@
 					<h4 class="modal-title" id="exampleModalLabel">О приложении</h4>
 				</div>
 				<div class="modal-body">
-					<div class="about">
-						<h5 class="about-title">Информация</h5>
-						<p class="about-item">
-							<span class="about-item__title">Разработчик: </span>
-							<span class="about-item__value about-dev"></span>
-						</p>
-						<p class="about-item">
-							<span class="about-item__title">Версия: </span>
-							<span class="about-item__value about-version"></span>
-						</p>
-						<p class="about-item">
-							<span class="about-item__title">Дата: </span>
-							<span class="about-item__value about-date"></span>
-						</p>
-						<p class="about-item">
-							Создано при поддержке Node.js и Bootstrap.<br>
-							Icons made by <a href="#" data-toggle="tooltip" data-placement="top" title="https://www.flaticon.com/authors/freepik" tabindex="-1">Freepik</a> from <a tabindex="-1" data-toggle="tooltip" data-placement="top" href="#" title="https://www.flaticon.com/"> www.flaticon.com</a><br>
-							&copy; 2020-2020 All rights reserved.
-						</p>
-					</div>
-					<hr class="about-item-hr">
 					<div class="settings">
 						<h5 class="settings-title">Настройки</h5>
 						<div class="settings-area">
@@ -192,6 +211,27 @@
 								<p class="settings__lvl-3 settings__lvl">Сложный</p>
 							</div>
 						</div>
+					</div>
+					<hr class="about-item-hr">
+					<div class="about">
+						<h5 class="about-title">Информация</h5>
+						<p class="about-item">
+							<span class="about-item__title">Разработчик: </span>
+							<span class="about-item__value about-dev">ShitCoding Studio, fab4u_4empion</span>
+						</p>
+						<p class="about-item">
+							<span class="about-item__title">Версия: </span>
+							<span class="about-item__value about-version">3.2.2</span>
+						</p>
+						<p class="about-item">
+							<span class="about-item__title">Дата: </span>
+							<span class="about-item__value about-date">01.05.2021</span>
+						</p>
+						<p class="about-item">
+							Создано при поддержке Node.js и Bootstrap.<br>
+							Icons made by <a href="#" data-toggle="tooltip" data-placement="top" title="https://www.flaticon.com/authors/freepik" tabindex="-1">Freepik</a> from <a tabindex="-1" data-toggle="tooltip" data-placement="top" href="#" title="https://www.flaticon.com/"> www.flaticon.com</a><br>
+							&copy; 2020-2021 All rights reserved.
+						</p>
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -331,6 +371,7 @@
 <script src="common/jquery-3.4.1.min.js"></script>
 <script src="common/bootstrap.bundle.js"></script>
 <script src="gameRules/GameScript.js"></script>
+<script src="gameRules/pvpMode.js"></script>
 <script src="statistics.js"></script>
 <script src="about.js"></script>
 <script src="preloader.js"></script>

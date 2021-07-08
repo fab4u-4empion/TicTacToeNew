@@ -3,6 +3,8 @@ function statistics() {
 	$("#lose").modal("hide");
 	$("#win").modal("hide");
 	$("#draw").modal("hide");
+	$('#win_cross').modal("hide");
+    $('#win_circle').modal("hide");
 	$("#statistics").modal("show");
 
 	$(".nav-link").click(() => {
@@ -31,7 +33,7 @@ function statistics() {
 	$(".stat-draw-normal").html(drawN);
 	$(".stat-lose-normal").html(loseN);
 	$(".stat-win-normal").html(winN);
-	$(".stat-all-normal").html(drawE+winE+loseE);
+	$(".stat-all-normal").html(drawN + winN + loseN);
 	$(".stat-winrate-normal").html( Math.floor((100*(winN)/(winN+loseN+drawN))) + "%" );
 	if ( (winN+loseN+drawN) == 0 ) {
 		$(".stat-winrate-normal").html("0%");

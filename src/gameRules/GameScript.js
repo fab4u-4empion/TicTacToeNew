@@ -12,7 +12,7 @@ $(document).ready(function(){
 		localStorage.setItem("item-turn", false);
 		localStorage.setItem("complexity", 1);
 		localStorage.setItem("scheme", "bright_light");
-		localStorage.setItem("gamemode", "0");
+		localStorage.setItem("game_mode", false);
 	} 
 });
 
@@ -21,6 +21,8 @@ function inmenu() {
 	$("#lose").modal("hide");
 	$("#win").modal("hide");
 	$("#draw").modal("hide");
+	$('#win_cross').modal("hide");
+    $('#win_circle').modal("hide");
 	$("#gameStart").modal("show");
 }
 
@@ -45,6 +47,10 @@ var win;
 var draw;
 
 async function StartGame() {
+	if (localStorage.getItem("game_mode")  == "true") {
+		pvpStart()
+		return
+	}
 	switch (localStorage.getItem("complexity")) {
 		case "1":
 			lose = "loseE"
@@ -159,31 +165,33 @@ async function TurnOfGamerAlert() {
 }
 
 $(".game-item").click(function(){
-	let elem = event.target;
-	let item = elem.getAttribute("id");
-	if (itemState[item]["toGame"]) {
-		if (item == "item5") {
-			Center = false;
+	if (localStorage.getItem("game_mode") != "true") {
+		let elem = event.target
+		let item = elem.getAttribute("id");
+		if (itemState[item]["toGame"]) {
+			if (item == "item5") {
+				Center = false;
+			}
+			forEasyLvl.splice(forEasyLvl.indexOf(Number(item[4])), 1);
+			if (forHardEdge.indexOf(Number(item[4])) != -1) {
+				forHardEdge.splice(forHardEdge.indexOf(Number(item[4])), 1);
+			}
+			if (forHardAngle.indexOf(Number(item[4])) != -1) {
+				forHardAngle.splice(forHardAngle.indexOf(Number(item[4])), 1);
+			}
+			elem.removeAttribute("tabindex");
+			elem.classList.add(userItem);
+			itemState[item]["value"] = userItem;
+			itemState[item]["toGame"] = false;
+			gameCompletioncCheckByGamer(); 
 		}
-		forEasyLvl.splice(forEasyLvl.indexOf(Number(item[4])), 1);
-		if (forHardEdge.indexOf(Number(item[4])) != -1) {
-			forHardEdge.splice(forHardEdge.indexOf(Number(item[4])), 1);
-		}
-		if (forHardAngle.indexOf(Number(item[4])) != -1) {
-			forHardAngle.splice(forHardAngle.indexOf(Number(item[4])), 1);
-		}
-		elem.removeAttribute("tabindex");
-		elem.classList.add(userItem);
-		itemState[item]["value"] = userItem;
-		itemState[item]["toGame"] = false;
-		gameCompletioncCheckByGamer(); 
-	}
+	}	
 });
 
 $(".game-item").keypress(function(){
-	let elem = event.target;
-	let item = elem.getAttribute("id");
-	if (event.keyCode == 13 || event.keyCode == 32) {
+	if (localStorage.getItem("game_mode") != "true") {
+		let elem = event.target;
+		let item = elem.getAttribute("id");
 		if (itemState[item]["toGame"]) {
 			if (item == "item5") {
 				Center = false;
@@ -202,7 +210,6 @@ $(".game-item").keypress(function(){
 			gameCompletioncCheckByGamer(); 
 		}
 	}
-	
 });
 
 async function gameCompletioncCheckByGamer() {
@@ -218,6 +225,7 @@ async function gameCompletioncCheckByGamer() {
 	) {
 		localStorage.setItem(win, Number(localStorage.getItem(win))+1);
 		$('#win').modal("show");
+		return
 	} else { 
 		if ( itemState["item1"]["toGame"] == false && itemState["item2"]["toGame"] == false && itemState["item3"]["toGame"] == false &&
 			 itemState["item4"]["toGame"] == false && itemState["item5"]["toGame"] == false && itemState["item6"]["toGame"] == false &&
@@ -225,7 +233,7 @@ async function gameCompletioncCheckByGamer() {
 		) {
 			$("#draw").modal("show");
 			localStorage.setItem(draw, Number(localStorage.getItem(draw))+1);
-			console.log(draw);
+			return
 		} else { 
 			switch (localStorage.getItem("complexity")) {
 				case "1":
@@ -256,6 +264,7 @@ async function gameCompletioncCheckByComputer() {
 		$('#computerTurn').modal("hide");
 		localStorage.setItem(lose, Number(localStorage.getItem(lose))+1);
 		$('#lose').modal("show");
+		return
 	} else { 
 		if ( itemState["item1"]["toGame"] == false && itemState["item2"]["toGame"] == false && itemState["item3"]["toGame"] == false &&
 			 itemState["item4"]["toGame"] == false && itemState["item5"]["toGame"] == false && itemState["item6"]["toGame"] == false &&
@@ -264,6 +273,7 @@ async function gameCompletioncCheckByComputer() {
 			$('#computerTurn').modal("hide");
 			$("#draw").modal("show");
 			localStorage.setItem(draw, Number(localStorage.getItem(draw))+1);
+			return
 		} else { 
 			$('#computerTurn').modal("hide");
 			TurnOfGamerAlert(); 
@@ -282,9 +292,9 @@ class Computer {
 				elemc.removeAttribute("tabindex");
 				itemState["item5"]["toGame"] = false;
 				itemState["item5"]["value"] = computerItem;
-				forHardEdge.splice(4, 1);
-				forEasyLvl.splice(4, 1);
-				forHardAngle.splice(4, 1);
+				forHardEdge.splice(forHardEdge.indexOf(5), 1);
+				forEasyLvl.splice(forEasyLvl.indexOf(5), 1);
+				forHardAngle.splice(forHardAngle.indexOf(5), 1);
 				gameCompletioncCheckByComputer();
 				return;	
 			}
@@ -491,14 +501,15 @@ class Computer {
 			if (Center && forHardEdge.length != 0) {
 					await sleep(1500);
 					let i = ArrayRandomElement(forHardEdge);
+					let itemValue = forHardEdge[i] 
 					gameItem = "item" + forHardEdge[i];
 					var elemc = document.getElementById(gameItem);
 					elemc.classList.add(computerItem);
 					elemc.removeAttribute("tabindex");
 					itemState[gameItem]["toGame"] = false;
 					itemState[gameItem]["value"] = computerItem;
-					forHardEdge.splice(i, 1);
-					forEasyLvl.splice(i, 1);
+					forHardEdge.splice(forHardEdge.indexOf(itemValue), 1);
+					forEasyLvl.splice(forEasyLvl.indexOf(itemValue), 1);
 					gameCompletioncCheckByComputer();
 					return;
 			} else {
@@ -506,18 +517,20 @@ class Computer {
 					await sleep(1500);
 					let i = ArrayRandomElement(forHardAngle);
 					gameItem = "item" + forHardAngle[i];
+					let itemValue = forHardEdge[i] 
 					var elemc = document.getElementById(gameItem);
 					elemc.classList.add(computerItem);
 					elemc.removeAttribute("tabindex");
 					itemState[gameItem]["toGame"] = false;
 					itemState[gameItem]["value"] = computerItem;
-					forHardEdge.splice(i, 1);
-					forEasyLvl.splice(i, 1);
+					forHardAngle.splice(forHardAngle.indexOf(itemValue), 1);
+					forEasyLvl.splice(forEasyLvl.indexOf(itemValue), 1);
 					gameCompletioncCheckByComputer();
 					return;
 				} else {
 					let i = ArrayRandomElement(forEasyLvl);
 					var gameItem = "item" + forEasyLvl[i];
+					let itemValue = forEasyLvl[i] 
 					$('#computerTurn').modal("show");
 					var elemc = document.getElementById(gameItem);
 					await sleep(1500);
@@ -525,7 +538,9 @@ class Computer {
 					elemc.removeAttribute("tabindex");
 					itemState[gameItem]["toGame"] = false;
 					itemState[gameItem]["value"] = computerItem;
-					forEasyLvl.splice(i, 1);
+					forHardAngle.splice(forHardAngle.indexOf(itemValue), 1);
+					forEasyLvl.splice(forEasyLvl.indexOf(itemValue), 1);
+					forHardEdge.splice(forHardEdge.indexOf(itemValue), 1);
 					gameCompletioncCheckByComputer();
 					return;	
 				}
@@ -549,7 +564,6 @@ class Computer {
 
 	static async Normal() {
 		$('#computerTurn').modal("show");
-		var gameState = false;
 		var	gameItem;
 		if (itemState["item5"]["toGame"]) {
 			await sleep(1500);
@@ -589,7 +603,6 @@ class Computer {
 				itemState[gameItem]["value"] = "NaN";
 			}
 		}
-			var Exit = true;
 			let i = ArrayRandomElement(forEasyLvl);
 			var gameItem = "item" + forEasyLvl[i];
 			$('#computerTurn').modal("show");
